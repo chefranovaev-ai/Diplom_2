@@ -52,10 +52,11 @@ public class UserSteps {
     }
 
     @Step("Проверка ответа с ошибкой доступа (код 403, success: false)")
-    public void checkForbiddenResponse(Response response) {
+    public void checkForbiddenResponse(Response response, String expectedMessage) {
         response.then()
                 .statusCode(403)
-                .body("success", org.hamcrest.Matchers.is(false));
+                .body("success", is(false))
+                .body("message", is(expectedMessage));
     }
 
 
@@ -68,10 +69,11 @@ public class UserSteps {
     }
 
     @Step("Проверка ответа при неверных реквизитах доступа (код 401, success: false)")
-    public void checkUnauthorizedResponse(Response response) {
+    public void checkUnauthorizedResponse(Response response, String expectedMessage) {
         response.then()
                 .statusCode(401)
-                .body("success", org.hamcrest.Matchers.is(false));
+                .body("success", is(false))
+                .body("message", is(expectedMessage));
     }
 
     @Step("Удаление пользователя из системы")

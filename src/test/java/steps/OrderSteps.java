@@ -4,7 +4,7 @@ import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import models.Order;
 import config.ApiConfig;
-
+import static org.hamcrest.CoreMatchers.is;
 import java.util.ArrayList;
 import java.util.List;
 import static io.restassured.RestAssured.given;
@@ -45,20 +45,19 @@ public class OrderSteps {
         return ingredients;
     }
 
-    @Step("Проверка ответа при создании заказа без ингредиентов (код 400, success: false)")
-    public void checkBadRequestResponse(Response response) {
+    @Step("Проверка ответа при создании заказа без ингредиентов (код 400, success: false, сообщение: {expectedMessage})")
+    public void checkBadRequestResponse(Response response, String expectedMessage) {
         response.then()
                 .statusCode(400)
-                .body("success", org.hamcrest.Matchers.is(false));
+                .body("success", is(false))
+                .body("message", is(expectedMessage));
     }
 
-    @Step("Проверка ответа при неверном хеше ингредиента (код 400 или 500)")
+    @Step("Проверка ответа при неверном хеше ингредиента (код 500)")
     public void checkInvalidHashResponse(Response response) {
         response.then()
-                .statusCode(org.hamcrest.Matchers.anyOf(
-                        org.hamcrest.Matchers.is(500),
-                        org.hamcrest.Matchers.is(400)
-                ));
+                .statusCode(500);
+
     }
 }
 
